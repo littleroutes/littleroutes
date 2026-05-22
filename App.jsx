@@ -331,8 +331,6 @@ Cover: one transport hack, one food strategy, one timing tip for the most crowde
 
 // ─── HELPERS ─────────────────────────────────────────────────────────────────
 
-// ─── BRANDED RENDERER ────────────────────────────────────────────────────────
-
 function md(text) {
   if (!text) return "";
   return text
@@ -340,516 +338,108 @@ function md(text) {
     .replace(/\*(.+?)\*/g, "<em>$1</em>");
 }
 
-function parseBlocks(text) {
-  // Split AI output into named sections by ## headings
-  const lines = text.split("\n");
-  const sections = [];
-  let current = { title: "intro", lines: [] };
-  for (const line of lines) {
-    if (/^## /.test(line)) {
-      sections.push(current);
-      current = { title: line.replace(/^## /, "").trim(), lines: [] };
-    } else {
-      current.lines.push(line);
-    }
-  }
-  sections.push(current);
-  return sections;
-}
+function renderPlaybook(text, answers, tier) {
+  if (!text) return null;
 
-function renderLines(lines) {
-  return lines.map((line, i) => {
-    if (!line.trim()) return null;
-    if (/^### /.test(line)) return (
-      <h3 key={i} style={{ fontFamily:"'Fraunces',serif", fontSize:"1.15rem", fontWeight:700, color:"#1a3a6b", marginTop:"1.4rem", marginBottom:"0.4rem", lineHeight:1.2 }}>
-        {line.replace(/^### /, "")}
-      </h3>
+  const lines = text.split("\n");
+
+  const rendered = lines.map((line, i) => {
+    if (!line.trim()) return <div key={i} style={{ height: "0.5rem" }} />;
+
+    if (/^## /.test(line)) return (
+      <h2 key={i} style={{
+        fontFamily: "'Fraunces', serif",
+        fontSize: "1.5rem", fontWeight: 900,
+        color: "#1a3a6b",
+        marginTop: "2.5rem", marginBottom: "0.6rem",
+        paddingBottom: "0.5rem",
+        borderBottom: "3px solid #0288D1",
+        lineHeight: 1.2,
+      }}>{line.replace(/^## /, "")}</h2>
     );
+
+    if (/^### /.test(line)) return (
+      <h3 key={i} style={{
+        fontFamily: "'Fraunces', serif",
+        fontSize: "1.2rem", fontWeight: 700,
+        color: "#1a3a6b",
+        marginTop: "1.8rem", marginBottom: "0.4rem",
+        background: "linear-gradient(135deg, #0288D1, #9C7FE0)",
+        color: "#fff",
+        padding: "0.6rem 1rem",
+        borderRadius: 10,
+      }}>{line.replace(/^### /, "")}</h3>
+    );
+
     if (/^\*\*(.+?):\*\*/.test(line)) {
       const m = line.match(/^\*\*(.+?):\*\*\s*(.*)/s);
       if (m) return (
-        <p key={i} style={{ marginBottom:"0.5rem", lineHeight:1.8, fontSize:"0.92rem" }}>
-          <strong style={{ color:"#1a3a6b" }}>{m[1]}:</strong>{" "}
-          <span dangerouslySetInnerHTML={{ __html: md(m[2]) }} />
-        </p>
+        <div key={i} style={{
+          background: "#F3FAFF",
+          border: "1.5px solid #E1F5FE",
+          borderLeft: "4px solid #0288D1",
+          borderRadius: 8,
+          padding: "0.7rem 1rem",
+          marginBottom: "0.5rem",
+        }}>
+          <strong style={{ color: "#0288D1", fontFamily: "'Fredoka', sans-serif", fontSize: "0.75rem", letterSpacing: "0.08em", textTransform: "uppercase" }}>{m[1]}</strong>
+          <p style={{ fontSize: "0.9rem", color: "#1a3a6b", lineHeight: 1.75, marginTop: "0.2rem" }} dangerouslySetInnerHTML={{ __html: md(m[2]) }} />
+        </div>
       );
     }
+
     if (/^[-•]\s/.test(line) || /^\d+\.\s/.test(line)) return (
-      <div key={i} style={{ display:"flex", gap:"0.6rem", marginBottom:"0.4rem", alignItems:"flex-start" }}>
-        <span style={{ color:"#0288D1", fontWeight:800, flexShrink:0, marginTop:"0.1rem" }}>›</span>
-        <p style={{ fontSize:"0.9rem", lineHeight:1.75, color:"#334" }} dangerouslySetInnerHTML={{ __html: md(line.replace(/^[-•]\s/,"").replace(/^\d+\.\s/,"")) }} />
+      <div key={i} style={{ display: "flex", gap: "0.6rem", alignItems: "flex-start", marginBottom: "0.4rem", paddingLeft: "0.5rem" }}>
+        <span style={{ color: "#0288D1", fontWeight: 900, flexShrink: 0, marginTop: "0.1rem" }}>›</span>
+        <p style={{ fontSize: "0.9rem", color: "#334", lineHeight: 1.75 }} dangerouslySetInnerHTML={{ __html: md(line.replace(/^[-•]\s/, "").replace(/^\d+\.\s/, "")) }} />
       </div>
     );
-    return <p key={i} style={{ fontSize:"0.9rem", lineHeight:1.8, color:"#334", marginBottom:"0.4rem" }} dangerouslySetInnerHTML={{ __html: md(line) }} />;
-  }).filter(Boolean);
-}
 
-function PlaybookCover({ answers, tier, kidnames }) {
-  const tierColors = { essential:"#0288D1", playbook:"#9C7FE0", "family-pack":"#C6FF00" };
-  const tierTextColors = { essential:"#fff", playbook:"#fff", "family-pack":"#1a3a6b" };
+    return (
+      <p key={i} style={{ fontSize: "0.92rem", color: "#334", lineHeight: 1.8, marginBottom: "0.4rem" }}
+        dangerouslySetInnerHTML={{ __html: md(line) }} />
+    );
+  });
+
   return (
-    <div style={{ background:"linear-gradient(145deg,#0288D1 0%,#1565C0 50%,#9C7FE0 100%)", padding:"4rem 2rem 3rem", textAlign:"center", position:"relative", overflow:"hidden" }}>
-      <div style={{ position:"absolute", width:350, height:350, borderRadius:"50%", background:"rgba(198,255,0,0.07)", top:-80, right:-80 }} />
-      <div style={{ position:"absolute", width:200, height:200, borderRadius:"50%", background:"rgba(255,255,255,0.05)", bottom:-40, left:-40 }} />
-      <div style={{ position:"relative", zIndex:1 }}>
-        <div style={{ display:"inline-flex", alignItems:"center", gap:"0.5rem", background:"rgba(255,255,255,0.12)", border:"1px solid rgba(255,255,255,0.2)", borderRadius:50, padding:"0.4rem 1rem", marginBottom:"1.8rem" }}>
-          <span>🧭</span>
-          <span style={{ fontFamily:"'Fredoka',sans-serif", fontSize:"0.95rem", fontWeight:600, color:"#fff" }}>Little<span style={{ color:"#C6FF00" }}>Routes</span></span>
-        </div>
-        <div style={{ display:"inline-block", background:"rgba(198,255,0,0.15)", border:"1px solid rgba(198,255,0,0.35)", color:"#C6FF00", fontSize:"0.68rem", letterSpacing:"0.2em", textTransform:"uppercase", fontWeight:800, padding:"0.3rem 0.9rem", borderRadius:50, marginBottom:"1.2rem", fontFamily:"'Fredoka',sans-serif" }}>
-          ✦ Family Travel Playbook
-        </div>
-        <h1 style={{ fontFamily:"'Fraunces',serif", fontSize:"clamp(2.8rem,7vw,5rem)", fontWeight:900, color:"#fff", lineHeight:1.05, letterSpacing:"-0.02em", marginBottom:"0.5rem" }}>
-          {kidnames ? `${kidnames.split(" ")[0]}'s` : "Your"}<br /><em style={{ fontStyle:"italic", color:"#C6FF00" }}>{answers.destination?.split(",")[0]}</em>
-        </h1>
-        <p style={{ fontFamily:"'Fredoka',sans-serif", fontSize:"1.1rem", color:"rgba(255,255,255,0.7)", marginBottom:"2rem", letterSpacing:"0.04em" }}>
-          {answers.destination} · {answers.duration}
-        </p>
-        <div style={{ display:"flex", flexWrap:"wrap", gap:"0.5rem", justifyContent:"center", marginBottom:"2rem" }}>
-          {["🗺️ Itinerary","🧠 Talking Points","🔍 Scavenger Hunt","✨ One Moments",
-            ...(tier.id !== "essential" ? ["🛫 Before You Land","🎯 Daily Challenge"] : []),
-            ...(tier.id === "family-pack" ? ["💌 Personal Letter","📖 Memory Journal","🎒 Show & Tell"] : [])
-          ].map(c => (
-            <span key={c} style={{ background:"rgba(255,255,255,0.12)", border:"1px solid rgba(255,255,255,0.2)", color:"rgba(255,255,255,0.9)", fontSize:"0.78rem", fontWeight:700, padding:"0.35rem 0.85rem", borderRadius:50 }}>{c}</span>
-          ))}
-        </div>
-        <div style={{ display:"inline-block", background:tierColors[tier.id], color:tierTextColors[tier.id], fontFamily:"'Fredoka',sans-serif", fontSize:"0.95rem", fontWeight:700, padding:"0.6rem 2rem", borderRadius:50, boxShadow:"0 4px 0 rgba(0,0,0,0.15)" }}>
-          {tier.name} Plan — ${tier.price}
+    <div style={{ fontFamily: "'Nunito', sans-serif" }}>
+      {/* Cover */}
+      <div style={{ background: "linear-gradient(135deg, #0288D1 0%, #9C7FE0 100%)", padding: "4rem 2rem 3rem", textAlign: "center", position: "relative", overflow: "hidden" }}>
+        <div style={{ position: "absolute", width: 300, height: 300, borderRadius: "50%", background: "rgba(198,255,0,0.08)", top: -60, right: -60 }} />
+        <div style={{ position: "relative", zIndex: 1 }}>
+          <div style={{ fontFamily: "'Fredoka', sans-serif", fontSize: "0.72rem", letterSpacing: "0.2em", textTransform: "uppercase", color: "rgba(198,255,0,0.9)", fontWeight: 800, marginBottom: "0.8rem" }}>✦ {tier.name} Family Playbook</div>
+          <h1 style={{ fontFamily: "'Fraunces', serif", fontSize: "clamp(2rem,5vw,3.2rem)", fontWeight: 900, color: "#fff", lineHeight: 1.1, marginBottom: "0.6rem" }}>
+            {answers.kidnames ? `${answers.kidnames.split(" ")[0]}'s` : "Your"} <em style={{ color: "#C6FF00", fontStyle: "italic" }}>{answers.destination?.split(",")[0]}</em> Playbook
+          </h1>
+          <p style={{ fontFamily: "'Fredoka', sans-serif", color: "rgba(255,255,255,0.7)", fontSize: "1rem", marginBottom: "1.5rem" }}>
+            {answers.destination} · {answers.duration}
+          </p>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem", justifyContent: "center" }}>
+            {["🗺️ Itinerary", "🧠 Talking Points", "✨ One Moments",
+              ...(tier.id !== "essential" ? ["🔍 Scavenger Hunt", "🛫 Before You Land"] : []),
+              ...(tier.id === "family-pack" ? ["💌 Personal Letter", "📖 Memory Journal"] : [])
+            ].map(c => (
+              <span key={c} style={{ background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.2)", color: "rgba(255,255,255,0.9)", fontSize: "0.75rem", fontWeight: 700, padding: "0.3rem 0.8rem", borderRadius: 50 }}>{c}</span>
+            ))}
+          </div>
         </div>
       </div>
-    </div>
-  );
-}
 
-function SectionBand({ bg, children, style={} }) {
-  return <div style={{ background:bg, padding:"2.5rem 1.5rem", ...style }}><div style={{ maxWidth:760, margin:"0 auto" }}>{children}</div></div>;
-}
-
-function BandLabel({ color, children }) {
-  return <div style={{ fontFamily:"'Fredoka',sans-serif", fontSize:"0.68rem", letterSpacing:"0.18em", textTransform:"uppercase", fontWeight:800, color, marginBottom:"0.5rem", display:"flex", alignItems:"center", gap:"0.4rem" }}>{children}</div>;
-}
-
-function BandHeading({ color="#1a3a6b", children, center=false }) {
-  return <h2 style={{ fontFamily:"'Fraunces',serif", fontSize:"1.7rem", fontWeight:900, color, lineHeight:1.15, marginBottom:"1.2rem", textAlign:center?"center":"left" }}>{children}</h2>;
-}
-
-function ContentCard({ borderColor="#E1F5FE", accentColor, children, style={} }) {
-  return (
-    <div style={{ background:"#fff", border:`2px solid ${borderColor}`, borderLeft:accentColor?`4px solid ${accentColor}`:undefined, borderRadius:16, padding:"1.3rem 1.5rem", marginBottom:"1rem", boxShadow:`0 4px 0 ${borderColor}`, ...style }}>
-      {children}
-    </div>
-  );
-}
-
-function CardLabel({ color, children }) {
-  return <div style={{ fontFamily:"'Fredoka',sans-serif", fontSize:"0.65rem", letterSpacing:"0.15em", textTransform:"uppercase", fontWeight:800, color, marginBottom:"0.4rem" }}>{children}</div>;
-}
-
-function DarkCard({ bg="#1a3a6b", children, style={} }) {
-  return <div style={{ background:bg, borderRadius:14, padding:"1.1rem 1.3rem", marginBottom:"0.8rem", ...style }}>{children}</div>;
-}
-
-function TierDivider({ tier }) {
-  const labels = { playbook:"Playbook Extras · $27 & above", "family-pack":"Family Pack Extras · $47" };
-  const includes = {
-    playbook:"Before You Land · Scavenger Hunt · Daily Challenge · Dinner Questions",
-    "family-pack":"Personal Letter · One Moment Collection · Memory Journal · Show & Tell"
-  };
-  return (
-    <div style={{ background:"#C6FF00", padding:"1.6rem 2rem", textAlign:"center" }}>
-      <div style={{ fontFamily:"'Fredoka',sans-serif", fontSize:"1.1rem", fontWeight:700, color:"#1a3a6b", display:"flex", alignItems:"center", justifyContent:"center", gap:"0.8rem", flexWrap:"wrap" }}>
-        <span>✦ {labels[tier]}</span>
+      {/* Content */}
+      <div style={{ background: "#fff", maxWidth: 760, margin: "0 auto", padding: "2rem 2rem 4rem" }}>
+        {rendered}
       </div>
-      <p style={{ fontSize:"0.8rem", color:"#2a4a00", fontWeight:600, marginTop:"0.3rem" }}>{includes[tier]}</p>
-    </div>
-  );
-}
 
-function renderPlaybook(text, answers, tier) {
-  if (!text) return null;
-  const sections = parseBlocks(text);
-
-  const get = (keyword) => sections.find(s => s.title.toLowerCase().includes(keyword.toLowerCase()));
-  const getDays = () => sections.filter(s => /^day\s+\d/i.test(s.title));
-
-  const welcome = get("welcome");
-  const mystery = get("mystery");
-  const days = getDays();
-  const tips = get("survival");
-  const before = get("before you land");
-  const hunt = get("scavenger");
-  const challenge = get("challenge");
-  const dinner = get("dinner");
-  const letter = get("kid briefing") || get("dear ");
-  const moments = get("one moment");
-  const journal = get("memory journal");
-  const showntell = get("post-trip") || get("show");
-
-  return (
-    <div style={{ fontFamily:"'Nunito',sans-serif" }}>
-
-      {/* COVER */}
-      <PlaybookCover answers={answers} tier={tier} kidnames={answers.kidnames} />
-
-      {/* WELCOME */}
-      {welcome && (
-        <SectionBand bg="#0288D1">
-          <div style={{ fontFamily:"'Fraunces',serif", fontSize:"1.15rem", fontStyle:"italic", color:"rgba(255,255,255,0.92)", lineHeight:1.8, textAlign:"center" }}>
-            {renderLines(welcome.lines)}
-          </div>
-        </SectionBand>
-      )}
-
-      {/* MYSTERY */}
-      {mystery && (
-        <SectionBand bg="#1a3a6b">
-          <BandLabel color="#C6FF00">🔍 The Trip Mystery</BandLabel>
-          <BandHeading color="#fff">{mystery.title}</BandHeading>
-          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"0.8rem", marginBottom:"0.8rem" }}>
-            {["mission","matters","look for","reveal"].map(kw => {
-              const relevant = mystery.lines.filter(l => l.toLowerCase().includes(kw) || mystery.lines.indexOf(l) < 8);
-              return null;
-            })}
-          </div>
-          {/* Render mystery content in styled cards */}
-          {mystery.lines.reduce((acc, line, i) => {
-            if (line.startsWith("- **")) {
-              const m = line.match(/^- \*\*(.+?):\*\*\s*(.*)/);
-              if (m) acc.push(
-                <div key={i} style={{ background:"rgba(255,255,255,0.07)", border:"1px solid rgba(255,255,255,0.1)", borderRadius:14, padding:"1rem 1.2rem", marginBottom:"0.7rem" }}>
-                  <div style={{ fontFamily:"'Fredoka',sans-serif", fontSize:"0.65rem", letterSpacing:"0.15em", textTransform:"uppercase", color:"#9C7FE0", fontWeight:800, marginBottom:"0.35rem" }}>{m[1]}</div>
-                  <p style={{ fontSize:"0.88rem", color:"rgba(255,255,255,0.85)", lineHeight:1.65, fontWeight:500 }} dangerouslySetInnerHTML={{ __html: md(m[2]) }} />
-                </div>
-              );
-            } else if (line.trim() && !line.startsWith("#")) {
-              acc.push(<p key={i} style={{ fontSize:"0.88rem", color:"rgba(255,255,255,0.7)", lineHeight:1.65, marginBottom:"0.3rem" }} dangerouslySetInnerHTML={{ __html: md(line) }} />);
-            }
-            return acc;
-          }, [])}
-        </SectionBand>
-      )}
-
-      {/* DAYS */}
-      <SectionBand bg="#F3FAFF">
-        <div style={{ textAlign:"center", marginBottom:"2rem" }}>
-          <BandLabel color="#0288D1">📅 Your Family Adventure</BandLabel>
-          <BandHeading center>Day by Day</BandHeading>
+      {/* Footer */}
+      <div style={{ background: "#1a3a6b", padding: "2rem", textAlign: "center" }}>
+        <div style={{ fontFamily: "'Fredoka', sans-serif", fontSize: "1.1rem", fontWeight: 600, color: "#fff", marginBottom: "0.3rem" }}>
+          Little<span style={{ color: "#0288D1" }}>Routes</span>
         </div>
-
-        {days.length > 0 ? days.map((day, di) => {
-          const lines = day.lines;
-          // Parse sub-sections within a day
-          const getBlock = (kw) => {
-            const start = lines.findIndex(l => new RegExp(kw,"i").test(l));
-            if (start === -1) return [];
-            const end = lines.findIndex((l, i) => i > start && /^\*\*[A-Z]/.test(l) && !new RegExp(kw,"i").test(l));
-            return lines.slice(start + 1, end === -1 ? lines.length : end);
-          };
-          const charLines = (() => {
-            const s = lines.findIndex(l => /meet today|character/i.test(l));
-            const e = lines.findIndex((l,i) => i > s && /^\*\*the day|^\*\*morning|^\*\*afternoon/i.test(l));
-            return s === -1 ? [] : lines.slice(s+1, e === -1 ? s+8 : e);
-          })();
-          const talkLines = (() => {
-            const s = lines.findIndex(l => /talking points|what to say/i.test(l));
-            const e = lines.findIndex((l,i) => i > s && /^\*\*today|^\*\*the one|sticky fact/i.test(l));
-            return s === -1 ? [] : lines.slice(s+1, e === -1 ? s+6 : e);
-          })();
-          const factLine = lines.find(l => /sticky fact/i.test(l.toLowerCase())) || "";
-          const factIdx = lines.indexOf(factLine);
-          const factText = factIdx !== -1 ? lines.slice(factIdx+1, factIdx+3).join(" ") : "";
-          const momentIdx = lines.findIndex(l => /the one moment/i.test(l));
-          const momentText = momentIdx !== -1 ? lines.slice(momentIdx+1, momentIdx+4).join(" ") : "";
-          const morningIdx = lines.findIndex(l => /^\*\*morning/i.test(l));
-          const afternoonIdx = lines.findIndex(l => /^\*\*afternoon/i.test(l));
-          const eveningIdx = lines.findIndex(l => /^\*\*evening/i.test(l));
-          const morningText = morningIdx !== -1 ? lines.slice(morningIdx, morningIdx+3).join(" ") : "";
-          const afternoonText = afternoonIdx !== -1 ? lines.slice(afternoonIdx, afternoonIdx+3).join(" ") : "";
-          const eveningText = eveningIdx !== -1 ? lines.slice(eveningIdx, eveningIdx+3).join(" ") : "";
-
-          return (
-            <div key={di} style={{ background:"#fff", border:"2px solid #E1F5FE", borderRadius:24, marginBottom:"1.5rem", overflow:"hidden", boxShadow:"0 5px 0 #E1F5FE" }}>
-              {/* Day header */}
-              <div style={{ background:"linear-gradient(135deg,#0288D1 0%,#9C7FE0 100%)", padding:"1.3rem 1.8rem", display:"flex", alignItems:"center", gap:"1rem" }}>
-                <div style={{ background:"rgba(255,255,255,0.18)", border:"1px solid rgba(255,255,255,0.25)", borderRadius:"50%", width:46, height:46, display:"flex", alignItems:"center", justifyContent:"center", fontFamily:"'Fredoka',sans-serif", fontSize:"1.2rem", fontWeight:700, color:"#fff", flexShrink:0 }}>
-                  {di+1}
-                </div>
-                <div style={{ fontFamily:"'Fraunces',serif", fontSize:"1.3rem", fontWeight:700, color:"#fff", lineHeight:1.2 }} dangerouslySetInnerHTML={{ __html: md(day.title.replace(/^Day\s+\d+\s*[—-]\s*/i,"")) }} />
-              </div>
-
-              <div style={{ padding:"1.5rem 1.8rem" }}>
-
-                {/* Character */}
-                {charLines.length > 0 && (
-                  <div style={{ background:"#EDE9FF", border:"2px solid rgba(156,127,224,0.2)", borderLeft:"4px solid #9C7FE0", borderRadius:14, padding:"1.1rem 1.3rem", marginBottom:"1.2rem" }}>
-                    <CardLabel color="#9C7FE0">👤 Meet Today's Character</CardLabel>
-                    <div style={{ fontSize:"0.88rem", color:"#334", lineHeight:1.75 }}>{renderLines(charLines)}</div>
-                  </div>
-                )}
-
-                {/* Plan */}
-                {[["☀️ Morning", morningText], ["🍕 Afternoon", afternoonText], ["🌙 Evening", eveningText]].map(([label, txt]) => txt ? (
-                  <div key={label} style={{ marginBottom:"0.8rem" }}>
-                    <div style={{ fontFamily:"'Fredoka',sans-serif", fontSize:"0.72rem", letterSpacing:"0.12em", textTransform:"uppercase", color:"#0288D1", fontWeight:800, marginBottom:"0.25rem" }}>{label}</div>
-                    <p style={{ fontSize:"0.9rem", color:"#334", lineHeight:1.75 }} dangerouslySetInnerHTML={{ __html: md(txt.replace(/^\*\*[^*]+\*\*\s*/,"")) }} />
-                  </div>
-                ) : null)}
-
-                <div style={{ height:1, background:"#E1F5FE", margin:"1rem 0" }} />
-
-                {/* Talking points */}
-                {talkLines.length > 0 && (
-                  <div style={{ background:"#F3FAFF", border:"2px solid #E1F5FE", borderLeft:"4px solid #0288D1", borderRadius:14, padding:"1.1rem 1.3rem", marginBottom:"1rem" }}>
-                    <CardLabel color="#0288D1">💬 What To Say — Little Explorers</CardLabel>
-                    <div style={{ fontFamily:"'Fraunces',serif", fontStyle:"italic", fontSize:"0.9rem", color:"#1a3a6b", lineHeight:1.8 }}>{renderLines(talkLines)}</div>
-                  </div>
-                )}
-
-                {/* Sticky fact */}
-                {factText && (
-                  <div style={{ background:"#1a3a6b", borderRadius:14, padding:"1rem 1.3rem", marginBottom:"0.8rem", display:"flex", gap:"0.8rem", alignItems:"flex-start" }}>
-                    <span style={{ fontSize:"1.3rem", flexShrink:0 }}>🧠</span>
-                    <div>
-                      <CardLabel color="#C6FF00">Today's Sticky Fact</CardLabel>
-                      <p style={{ fontSize:"0.88rem", color:"rgba(255,255,255,0.9)", lineHeight:1.65, fontWeight:600 }} dangerouslySetInnerHTML={{ __html: md(factText) }} />
-                    </div>
-                  </div>
-                )}
-
-                {/* One Moment */}
-                {momentText && (
-                  <div style={{ background:"linear-gradient(135deg,#0288D1 0%,#9C7FE0 100%)", borderRadius:14, padding:"1rem 1.3rem", display:"flex", gap:"0.8rem", alignItems:"flex-start" }}>
-                    <span style={{ fontSize:"1.3rem", flexShrink:0 }}>✨</span>
-                    <div>
-                      <CardLabel color="rgba(198,255,0,0.9)">The One Moment — Put Your Phones Away</CardLabel>
-                      <p style={{ fontFamily:"'Fraunces',serif", fontStyle:"italic", fontSize:"0.88rem", color:"rgba(255,255,255,0.92)", lineHeight:1.75 }} dangerouslySetInnerHTML={{ __html: md(momentText) }} />
-                    </div>
-                  </div>
-                )}
-
-              </div>
-            </div>
-          );
-        }) : (
-          // Fallback: if day parsing fails, render all day sections cleanly
-          <ContentCard>
-            {sections.filter(s => /day/i.test(s.title)).map((s,i) => (
-              <div key={i} style={{ marginBottom:"1.5rem" }}>
-                <h3 style={{ fontFamily:"'Fraunces',serif", fontSize:"1.2rem", fontWeight:700, color:"#1a3a6b", marginBottom:"0.5rem" }}>{s.title}</h3>
-                {renderLines(s.lines)}
-              </div>
-            ))}
-          </ContentCard>
-        )}
-      </SectionBand>
-
-      {/* SURVIVAL TIPS */}
-      {tips && (
-        <SectionBand bg="#0288D1">
-          <div style={{ textAlign:"center", marginBottom:"1.5rem" }}>
-            <BandLabel color="#C6FF00">🧳 Family Survival</BandLabel>
-            <BandHeading color="#fff" center>Tips most guides never tell you</BandHeading>
-          </div>
-          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"0.8rem" }}>
-            {tips.lines.filter(l => l.trim() && !l.startsWith("#")).reduce((acc, line, i) => {
-              if (/^\d+\.|\*\*[A-Z🚌🍝⏰🙏🚨]/.test(line)) {
-                acc.push({ label: line, body: [] });
-              } else if (acc.length > 0) {
-                acc[acc.length-1].body.push(line);
-              }
-              return acc;
-            }, []).map((tip, i) => (
-              <div key={i} style={{ background:"rgba(255,255,255,0.1)", border:"1px solid rgba(255,255,255,0.15)", borderRadius:14, padding:"1.1rem 1.3rem", gridColumn: i === 4 ? "span 2" : undefined }}>
-                <div style={{ fontFamily:"'Fredoka',sans-serif", fontSize:"0.65rem", letterSpacing:"0.15em", textTransform:"uppercase", color:"#C6FF00", fontWeight:800, marginBottom:"0.4rem" }} dangerouslySetInnerHTML={{ __html: md(tip.label.replace(/^\d+\.\s*/,"")) }} />
-                <p style={{ fontSize:"0.84rem", color:"rgba(255,255,255,0.88)", lineHeight:1.65 }}>{tip.body.join(" ")}</p>
-              </div>
-            ))}
-          </div>
-        </SectionBand>
-      )}
-
-      {/* PLAYBOOK TIER DIVIDER */}
-      {tier.id !== "essential" && <TierDivider tier="playbook" />}
-
-      {/* BEFORE YOU LAND */}
-      {before && (
-        <SectionBand bg="#F3FAFF">
-          <BandLabel color="#0288D1">✈️ Before You Land</BandLabel>
-          <BandHeading>Read this on the plane</BandHeading>
-          {before.lines.reduce((acc, line, i, arr) => {
-            if (/^### /.test(line)) {
-              acc.push({ heading: line.replace(/^### /,""), lines: [], isLetter: /bedtime|story/i.test(line) });
-            } else if (acc.length > 0) {
-              acc[acc.length-1].lines.push(line);
-            }
-            return acc;
-          }, []).map((block, i) => (
-            <div key={i} style={{
-              background: block.isLetter ? "#EDE9FF" : "#fff",
-              border: block.isLetter ? "2px solid rgba(156,127,224,0.2)" : "2px solid #E1F5FE",
-              borderRadius:16, padding:"1.3rem 1.5rem", marginBottom:"1rem",
-              boxShadow: block.isLetter ? "0 3px 0 rgba(156,127,224,0.15)" : "0 4px 0 #E1F5FE"
-            }}>
-              <h3 style={{ fontFamily:"'Fredoka',sans-serif", fontSize:"1rem", fontWeight:700, color: block.isLetter ? "#9C7FE0" : "#0288D1", marginBottom:"0.7rem" }}>
-                {block.heading}
-              </h3>
-              <div style={{ fontFamily: block.isLetter ? "'Fraunces',serif" : "inherit", fontStyle: block.isLetter ? "italic" : "normal", fontSize:"0.9rem", color:"#334", lineHeight:1.8 }}>
-                {renderLines(block.lines)}
-              </div>
-            </div>
-          ))}
-          {/* Render non-subsection content */}
-          {before.lines[0] && !/^###/.test(before.lines[0]) && (
-            <ContentCard>
-              {renderLines(before.lines.filter((_,i) => {
-                const hasH3 = before.lines.some(l => /^###/.test(l));
-                return !hasH3;
-              }))}
-            </ContentCard>
-          )}
-        </SectionBand>
-      )}
-
-      {/* SCAVENGER HUNT */}
-      {hunt && (
-        <SectionBand bg="#1a3a6b">
-          <div style={{ textAlign:"center", marginBottom:"1.5rem" }}>
-            <BandLabel color="#C6FF00">🔍 Scavenger Hunt</BandLabel>
-            <BandHeading color="#fff" center>Little Explorer Hunt</BandHeading>
-            <p style={{ fontFamily:"'Fredoka',sans-serif", fontSize:"0.78rem", color:"rgba(255,255,255,0.45)", fontWeight:600, marginTop:"-0.5rem" }}>Every item is specific to {answers.destination?.split(",")[0]} — tick each one off as you go!</p>
-          </div>
-          {hunt.lines.filter(l => /^[-\d]/.test(l.trim()) || l.trim().startsWith("Can you")).map((item, i) => (
-            <div key={i} style={{ background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.1)", borderRadius:14, padding:"0.9rem 1.1rem", marginBottom:"0.6rem", display:"flex", alignItems:"center", gap:"0.9rem" }}>
-              <div style={{ width:26, height:26, border:"2px solid rgba(198,255,0,0.35)", borderRadius:8, flexShrink:0, background:"rgba(198,255,0,0.05)" }} />
-              <p style={{ fontSize:"0.88rem", color:"rgba(255,255,255,0.88)", lineHeight:1.55, fontWeight:600 }} dangerouslySetInnerHTML={{ __html: md(item.replace(/^[-\d.]\s*/,"")) }} />
-            </div>
-          ))}
-        </SectionBand>
-      )}
-
-      {/* CHALLENGE */}
-      {challenge && (
-        <SectionBand bg="#C6FF00" style={{ textAlign:"center" }}>
-          <BandLabel color="rgba(0,0,0,0.5)">🎯 Daily Challenge</BandLabel>
-          <BandHeading color="#1a3a6b" center>{challenge.title}</BandHeading>
-          <div style={{ maxWidth:560, margin:"0 auto", fontSize:"0.95rem", color:"#2a4a00", lineHeight:1.75, fontWeight:600 }}>
-            {renderLines(challenge.lines)}
-          </div>
-        </SectionBand>
-      )}
-
-      {/* DINNER QUESTIONS */}
-      {dinner && (
-        <SectionBand bg="#F3FAFF">
-          <div style={{ textAlign:"center", marginBottom:"1.5rem" }}>
-            <BandLabel color="#0288D1">🍽️ Dinner Table</BandLabel>
-            <BandHeading center>One question, every evening</BandHeading>
-            <p style={{ fontFamily:"'Fredoka',sans-serif", fontSize:"0.82rem", color:"#90A4AE", fontWeight:600, marginTop:"-0.5rem" }}>No wrong answers. The kind that make everyone go quiet for a moment.</p>
-          </div>
-          {dinner.lines.filter(l => l.trim() && !l.startsWith("#")).map((line, i) => {
-            const m = line.match(/^\*?\*?Evening\s+(\d+)\*?\*?[:\s]+(.+)/i) || line.match(/^[-\d.]\s*(.+)/);
-            if (!m) return null;
-            return (
-              <div key={i} style={{ background:"#fff", border:"2px solid #E1F5FE", borderRadius:14, padding:"0.9rem 1.3rem", marginBottom:"0.6rem", display:"flex", alignItems:"flex-start", gap:"1rem", boxShadow:"0 3px 0 #E1F5FE" }}>
-                <div style={{ fontFamily:"'Fredoka',sans-serif", fontSize:"0.65rem", letterSpacing:"0.1em", textTransform:"uppercase", color:"#0288D1", fontWeight:800, flexShrink:0, marginTop:"0.15rem", whiteSpace:"nowrap" }}>
-                  Evening {i+1}
-                </div>
-                <p style={{ fontFamily:"'Fraunces',serif", fontStyle:"italic", fontSize:"0.9rem", color:"#1a3a6b", lineHeight:1.65 }} dangerouslySetInnerHTML={{ __html: md(line.replace(/^\*?\*?Evening\s+\d+\*?\*?[:\s]+/i,"").replace(/^[-\d.]\s*/,"")) }} />
-              </div>
-            );
-          }).filter(Boolean)}
-        </SectionBand>
-      )}
-
-      {/* FAMILY PACK TIER DIVIDER */}
-      {tier.id === "family-pack" && <TierDivider tier="family-pack" />}
-
-      {/* PERSONAL LETTER */}
-      {letter && tier.id === "family-pack" && (
-        <SectionBand bg="#9C7FE0">
-          <div style={{ textAlign:"center", marginBottom:"1.5rem" }}>
-            <BandLabel color="rgba(255,255,255,0.7)">💌 Personal Briefing</BandLabel>
-            <BandHeading color="#fff" center>A letter for {answers.kidnames?.split(" ")[0] || "your child"}</BandHeading>
-          </div>
-          <div style={{ background:"#fff", borderRadius:24, maxWidth:640, margin:"0 auto", padding:"2.2rem 2rem", boxShadow:"0 8px 0 rgba(0,0,0,0.1)", position:"relative" }}>
-            <div style={{ textAlign:"center", fontSize:"2rem", marginBottom:"1rem" }}>💌</div>
-            <div style={{ fontFamily:"'Fredoka',sans-serif", fontSize:"0.68rem", letterSpacing:"0.15em", textTransform:"uppercase", color:"#9C7FE0", fontWeight:800, marginBottom:"0.6rem" }}>Personal Briefing · For Their Eyes Only</div>
-            <div style={{ fontFamily:"'Fraunces',serif", fontSize:"0.95rem", color:"#334", lineHeight:1.85 }}>
-              {renderLines(letter.lines)}
-            </div>
-          </div>
-        </SectionBand>
-      )}
-
-      {/* ONE MOMENT COLLECTION */}
-      {moments && tier.id === "family-pack" && (
-        <SectionBand bg="#1a3a6b">
-          <div style={{ textAlign:"center", marginBottom:"1.5rem" }}>
-            <BandLabel color="#C6FF00">✨ Full Collection</BandLabel>
-            <BandHeading color="#fff" center>The One Moment — every day</BandHeading>
-            <p style={{ fontFamily:"'Fredoka',sans-serif", fontSize:"0.75rem", color:"rgba(255,255,255,0.4)", fontWeight:600, marginTop:"-0.5rem" }}>Screenshot this. One moment per day — phones away.</p>
-          </div>
-          {moments.lines.filter(l => /^\d+\./.test(l.trim()) || l.includes("Day")).map((line, i) => (
-            <div key={i} style={{ background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.08)", borderRadius:14, padding:"1rem 1.3rem", marginBottom:"0.7rem", display:"flex", alignItems:"flex-start", gap:"0.9rem", maxWidth:640, margin:"0 auto 0.7rem" }}>
-              <div style={{ background:"rgba(198,255,0,0.15)", color:"#C6FF00", fontFamily:"'Fredoka',sans-serif", fontSize:"0.78rem", fontWeight:800, padding:"0.2rem 0.65rem", borderRadius:50, flexShrink:0, whiteSpace:"nowrap" }}>
-                Day {i+1}
-              </div>
-              <p style={{ fontFamily:"'Fraunces',serif", fontStyle:"italic", fontSize:"0.88rem", color:"rgba(255,255,255,0.88)", lineHeight:1.65 }} dangerouslySetInnerHTML={{ __html: md(line.replace(/^\d+\.\s*/,"").replace(/^Day\s+\d+\s*[—-]\s*/i,"")) }} />
-            </div>
-          ))}
-        </SectionBand>
-      )}
-
-      {/* MEMORY JOURNAL */}
-      {journal && tier.id === "family-pack" && (
-        <SectionBand bg="#EDE9FF">
-          <div style={{ textAlign:"center", marginBottom:"1.5rem" }}>
-            <BandLabel color="#9C7FE0">📖 Memory Journal</BandLabel>
-            <BandHeading center><span style={{ color:"#9C7FE0" }}>Evening prompts</span> for {answers.kidnames?.split(" ")[0] || "your child"}</BandHeading>
-            <p style={{ fontFamily:"'Fredoka',sans-serif", fontSize:"0.8rem", color:"#90A4AE", fontWeight:600, marginTop:"-0.5rem" }}>Ask before bed. Answer out loud together.</p>
-          </div>
-          {journal.lines.filter(l => l.trim() && !l.startsWith("#")).filter((_,i,a) => a.filter(l=>l.trim()).indexOf(l) === i).filter((l,i) => i < 10).map((line, i) => (
-            <div key={i} style={{ background:"#fff", border:"2px solid rgba(156,127,224,0.2)", borderRadius:16, padding:"1rem 1.3rem", marginBottom:"0.6rem", maxWidth:640, margin:"0 auto 0.7rem", display:"flex", alignItems:"flex-start", gap:"0.9rem", boxShadow:"0 3px 0 rgba(156,127,224,0.15)" }}>
-              <div style={{ background:"#9C7FE0", color:"#fff", fontFamily:"'Fredoka',sans-serif", fontSize:"0.85rem", fontWeight:700, width:28, height:28, borderRadius:"50%", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>{i+1}</div>
-              <p style={{ fontFamily:"'Fraunces',serif", fontStyle:"italic", fontSize:"0.9rem", color:"#1a3a6b", lineHeight:1.65 }} dangerouslySetInnerHTML={{ __html: md(line.replace(/^[-\d.]\s*/,"")) }} />
-            </div>
-          ))}
-        </SectionBand>
-      )}
-
-      {/* SHOW & TELL */}
-      {showntell && tier.id === "family-pack" && (
-        <SectionBand bg="#0288D1">
-          <div style={{ textAlign:"center", marginBottom:"1.5rem" }}>
-            <BandLabel color="#C6FF00">🎒 Post-Trip</BandLabel>
-            <BandHeading color="#fff" center>Show & Tell Guide</BandHeading>
-          </div>
-          <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(200px,1fr))", gap:"0.8rem", maxWidth:720, margin:"0 auto" }}>
-            {showntell.lines.reduce((acc, line) => {
-              if (/^\*\*[^*]/.test(line) || /^#{1,3}/.test(line)) acc.push({ heading: line.replace(/^\*\*/,"").replace(/\*\*$/,"").replace(/^#+\s*/,""), items: [] });
-              else if (acc.length > 0 && line.trim()) acc[acc.length-1].items.push(line);
-              return acc;
-            }, []).map((block, i) => (
-              <div key={i} style={{ background:"rgba(255,255,255,0.1)", border:"1px solid rgba(255,255,255,0.15)", borderRadius:14, padding:"1.2rem" }}>
-                <div style={{ fontFamily:"'Fredoka',sans-serif", fontSize:"0.65rem", letterSpacing:"0.12em", textTransform:"uppercase", color:"#C6FF00", fontWeight:800, marginBottom:"0.5rem" }}>{block.heading}</div>
-                <div style={{ fontSize:"0.84rem", color:"rgba(255,255,255,0.88)", lineHeight:1.65 }}>{renderLines(block.items)}</div>
-              </div>
-            ))}
-          </div>
-        </SectionBand>
-      )}
-
-      {/* FOOTER */}
-      <div style={{ background:"#1a3a6b", padding:"2rem", textAlign:"center" }}>
-        <div style={{ fontFamily:"'Fredoka',sans-serif", fontSize:"1.1rem", fontWeight:600, color:"#fff", marginBottom:"0.3rem" }}>
-          Little<span style={{ color:"#0288D1" }}>Routes</span>
-        </div>
-        <p style={{ fontSize:"0.75rem", color:"rgba(255,255,255,0.35)", fontWeight:500 }}>Family Travel Playbooks · littleroutes.co</p>
-        <p style={{ fontSize:"0.72rem", color:"rgba(255,255,255,0.25)", fontWeight:500, marginTop:"0.2rem" }}>
+        <p style={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.4)" }}>Family Travel Playbooks · littleroutes.co</p>
+        <p style={{ fontSize: "0.72rem", color: "rgba(255,255,255,0.25)", marginTop: "0.2rem" }}>
           Created for {answers.kidnames || "your family"} · {answers.destination} · {answers.duration}
         </p>
       </div>
-
     </div>
   );
 }
@@ -911,7 +501,7 @@ export default function App() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           model: "claude-sonnet-4-20250514",
-          max_tokens: 1000,
+          max_tokens: 8000,
           messages: [{ role: "user", content: prompt }],
         }),
       });
