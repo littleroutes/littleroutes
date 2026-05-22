@@ -1,8 +1,29 @@
 {
   "name": "littleroutes",
   "version": "1.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
   "dependencies": {
     "react": "^18.0.0",
     "react-dom": "^18.0.0"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0",
+    "@vitejs/plugin-react": "^4.0.0"
   }
 }
+Commit changes.
+
+Once both are committed Vercel will redeploy automatically. Wait 60 seconds then refresh your site. Tell me what you see.
+        .cc-install-nudge { container-type: inline-size; }
+        @keyframes ccInstallNudgeIn {
+          from { opacity: 0; transform: translateY(8px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        @container (max-width: 450px) {
+          .cc-install-nudge-icon { display: none; }
+        }
+      Keep going in Claude CodeSwitch to Claude Code and let Claude work directly in your repo, running and testing as it goe
