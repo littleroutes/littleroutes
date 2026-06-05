@@ -1,7 +1,7 @@
 export const post = {
   slug: "rome-with-toddlers",
   title: "Rome With Toddlers: What Actually Works (And What to Skip)",
-  date: "2026-06-09",
+  date: "2026-06-04",
   excerpt: "Rome is extraordinary with kids under 6 — but not the way most travel guides suggest. Here's what actually works, and what to skip.",
   tags: ["Rome", "Toddlers", "Italy"],
   headerColor: "#1a3a6b",
