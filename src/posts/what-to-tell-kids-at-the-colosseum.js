@@ -1,7 +1,7 @@
 export const post = {
   slug: "what-to-tell-kids-at-the-colosseum",
   title: "What to Actually Tell Your Kids at the Colosseum (By Age)",
-  date: "2026-06-01",
+  date: "2026-06-02",
   excerpt: "Most parents walk into the Colosseum and say 'wow, isn't this amazing?' Their kids look at their phones. Here's what to say instead — for every age from 3 to 16.",
   tags: ["Rome", "Talking Points", "History"],
   headerColor: "#1a3a6b",
