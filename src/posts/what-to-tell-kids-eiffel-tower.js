@@ -2,7 +2,7 @@ export const post = {
   slug: "what-to-tell-kids-eiffel-tower",
   title: "What to Tell Your Kids at the Eiffel Tower — By Age",
   date: "2026-06-05",
-  excerpt: "Most families stand at the Eiffel Tower and take a photo. Here's what to say instead — for every age from 3 to 16.",
+  excerpt: "Most families just stand at the Eiffel Tower and take a photo. Here's what to say instead — for every age from 3 to 16.",
   tags: ["Paris", "Talking Points", "France"],
   headerColor: "#9C7FE0",
   readTime: 5,
