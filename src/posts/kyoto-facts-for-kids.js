@@ -1,9 +1,9 @@
 export const post = {
   slug: "kyoto-facts-for-kids",
   title: "7 Facts About Kyoto That Kids Actually Remember (And Keep Repeating)",
-  date: "2026-06-19",
+  date: "2026-06-13",
   excerpt: "These aren't textbook facts. They're the ones that make kids go quiet for a moment — then immediately turn to someone and say 'did you know...'",
-  tags: ["Kyoto", "Sticky Facts", "Educational Travel"],
+  tags: ["Kyoto", "Educational Travel"],
   headerColor: "#0288D1",
   readTime: 5,
   content: `
