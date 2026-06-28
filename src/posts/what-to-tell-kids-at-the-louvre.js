@@ -1,7 +1,7 @@
 export const post = {
   slug: "what-to-tell-kids-at-the-louvre",
   title: "What to Actually Tell Your Kids at the Louvre (By Age)",
-  date: "2026-07-06",
+  date: "2026-06-24",
   excerpt: "The Louvre breaks most families in the first hour. Here's what to say at every age so your kids actually look — and remember.",
   tags: ["Paris", "Talking Points", "Ages 7-12"],
   headerColor: "#9C7FE0",
