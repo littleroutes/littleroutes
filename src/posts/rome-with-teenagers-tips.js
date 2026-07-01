@@ -1,7 +1,7 @@
 export const post = {
   slug: "rome-with-teenagers-tips",
   title: "Rome With Teenagers: What Actually Works (And What to Skip)",
-  date: "2026-07-08",
+  date: "2026-07-01",
   excerpt: "Rome with a teenager doesn't fail because of the city. It fails because of how it's presented. Here's what actually works.",
   tags: ["Rome", "Destination Guide", "Teens"],
   headerColor: "#1a3a6b",
