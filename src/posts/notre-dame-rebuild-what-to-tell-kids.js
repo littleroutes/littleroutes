@@ -1,7 +1,7 @@
 export const post = {
   slug: "notre-dame-rebuild-what-to-tell-kids",
   title: "Notre-Dame's Rebuild: What to Tell Your Kids",
-  date: "2026-07-13",
+  date: "2026-07-01",
   excerpt: "Notre-Dame reopened in 2024, but the rebuild isn't finished — and that's actually the most interesting thing to tell your kids.",
   tags: ["Paris", "Talking Points", "History"],
   headerColor: "#9C7FE0",
