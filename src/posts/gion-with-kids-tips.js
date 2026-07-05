@@ -1,7 +1,7 @@
 export const post = {
   slug: "gion-with-kids-tips",
   title: "Gion With Kids: What Actually Works (And What Doesn't)",
-  date: "2026-07-15",
+  date: "2026-07-03",
   excerpt: "Gion isn't a theme park, and treating it like one with kids backfires fast. Here's what actually works in Kyoto's geisha district.",
   tags: ["Kyoto", "Destination Guide", "Ages 7-12"],
   headerColor: "#0288D1",
