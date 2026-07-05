@@ -1,7 +1,7 @@
 export const post = {
   slug: "what-to-say-at-arashiyama-bamboo-grove",
   title: "What to Say at Arashiyama Bamboo Grove — By Age",
-  date: "2026-07-10",
+  date: "2026-6-30",
   excerpt: "Arashiyama looks magical in photos and feels like a crowded hallway in person — unless you give your kids something to listen for first.",
   tags: ["Kyoto", "Talking Points", "Ages 7-12"],
   headerColor: "#0288D1",
