@@ -8,8 +8,10 @@ import { post as romeTeens } from "./rome-with-teenagers-tips.js";
 import { post as notreDame } from "./notre-dame-rebuild-what-to-tell-kids.js";
 import { post as gion } from "./gion-with-kids-tips.js";
 import { post as arashiyama } from "./what-to-say-at-arashiyama-bamboo-grove.js";
+import { post as fushimiInari } from "./fushimi-inari-with-kids.js";
 
 export const posts = [
+  fushimiInari,
   arashiyama,
   gion,
   notreDame,
