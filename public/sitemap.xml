@@ -3,59 +3,87 @@
 
   <!-- Main site -->
   <url>
-    <loc>https://littleroutes.co</loc>
+    <loc>https://www.littleroutes.co/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
 
   <!-- Blog listing -->
   <url>
-    <loc>https://littleroutes.co/blog</loc>
+    <loc>https://www.littleroutes.co/blog</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
 
-  <!-- Blog posts -->
+  <!-- Blog posts (sorted by date) -->
   <url>
-    <loc>https://littleroutes.co/blog/what-to-tell-kids-at-the-colosseum</loc>
-    <lastmod>2026-06-01</lastmod>
+    <loc>https://www.littleroutes.co/blog/what-to-tell-kids-at-the-colosseum</loc>
+    <lastmod>2026-06-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://littleroutes.co/blog/kyoto-with-toddler-tips</loc>
+    <loc>https://www.littleroutes.co/blog/kyoto-with-toddler-tips</loc>
     <lastmod>2026-06-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://littleroutes.co/blog/paris-with-teenagers-tips</loc>
+    <loc>https://www.littleroutes.co/blog/rome-with-toddlers</loc>
     <lastmod>2026-06-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://littleroutes.co/blog/fushimi-inari-with-kids</loc>
-    <lastmod>2026-06-06</lastmod>
+    <loc>https://www.littleroutes.co/blog/what-to-tell-kids-eiffel-tower</loc>
+    <lastmod>2026-06-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://littleroutes.co/blog/rome-with-toddlers</loc>
-    <lastmod>2026-06-09</lastmod>
+    <loc>https://www.littleroutes.co/blog/kyoto-facts-for-kids</loc>
+    <lastmod>2026-06-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
-  
+
   <url>
-  <loc>https://littleroutes.co/blog/what-to-tell-kids-eiffel-tower</loc>
-  <lastmod>2026-06-09</lastmod>
-  <changefreq>monthly</changefreq>
-  <priority>0.8</priority>
-</url>
+    <loc>https://www.littleroutes.co/blog/what-to-tell-kids-at-the-louvre</loc>
+    <lastmod>2026-06-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://www.littleroutes.co/blog/rome-with-teenagers-tips</loc>
+    <lastmod>2026-06-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://www.littleroutes.co/blog/what-to-say-at-arashiyama-bamboo-grove</loc>
+    <lastmod>2026-06-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://www.littleroutes.co/blog/notre-dame-rebuild-what-to-tell-kids</loc>
+    <lastmod>2026-07-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://www.littleroutes.co/blog/gion-with-kids-tips</loc>
+    <lastmod>2026-07-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
 
 </urlset>

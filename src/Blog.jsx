@@ -1,10 +1,16 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { posts } from "./posts/index.js";
+import { setSEO } from "./seo.js";
 
 export default function Blog() {
   useEffect(() => {
     window.scrollTo(0, 0);
+    setSEO({
+      title: "The LittleRoutes Journal | Family Travel Blog",
+      description: "Talking points, sticky facts, trip ideas and honest advice for parents who want their kids to actually understand what they're seeing.",
+      path: "/blog",
+    });
   }, []);
 
   const sorted = [...posts].sort((a, b) => new Date(b.date) - new Date(a.date));

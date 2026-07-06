@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Link, useParams, Navigate } from "react-router-dom";
 import { posts } from "./posts/index.js";
+import { setSEO } from "./seo.js";
 
 // Very simple markdown-to-HTML renderer (no external library needed)
 function renderMarkdown(md) {
@@ -42,9 +43,14 @@ export default function BlogPost() {
   useEffect(() => {
     window.scrollTo(0, 0);
     if (post) {
-      document.title = `${post.title} | LittleRoutes`;
+      setSEO({
+        title: `${post.title} | LittleRoutes`,
+        description: post.excerpt || undefined,
+        path: `/blog/${post.slug}`,
+        type: "article",
+        publishedTime: post.date,
+      });
     }
-    return () => { document.title = "LittleRoutes — Family Travel Playbooks"; };
   }, [post]);
 
   if (!post) return <Navigate to="/blog" replace />;

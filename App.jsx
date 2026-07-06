@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Blog from "./src/Blog.jsx";
 import BlogPost from "./src/BlogPost.jsx";
+import { setSEO } from "./src/seo.js";
 
 // ─── QUESTIONS ────────────────────────────────────────────────────────────────
 
@@ -398,6 +399,13 @@ function LittleRoutesApp() {
   const [loading, setLoading] = useState(false);
 
   const q = QUESTIONS[currentQ];
+
+  // Reset title/meta/canonical/OG tags to the homepage defaults whenever this
+  // component mounts (e.g. navigating back from /blog). Separate from the
+  // payment-detection effect below — do not merge into it.
+  useEffect(() => {
+    setSEO({ path: "/" });
+  }, []);
 
   function nextStep(newAnswers) {
     if (currentQ < QUESTIONS.length - 1) {
