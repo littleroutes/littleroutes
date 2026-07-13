@@ -39,7 +39,7 @@ What lands with a teenager in Paris is rarely the landmark itself — it's the d
 
 ---
 
-LittleRoutes playbooks include age-specific talking points written for teenagers — for every attraction, every day, any destination. From $17 at littleroutes.co.
+LittleRoutes playbooks include age-specific talking points written for teenagers — for every attraction, every day, any destination. That's exactly what [our Paris family playbook](https://littleroutes.co) includes. From $17 at littleroutes.co.
 
 If you're navigating a similar dynamic in another city, our post on [Rome with teenagers](https://littleroutes.co/blog/rome-with-teenagers-tips) covers the same problem from a different angle.
   `.trim(),
