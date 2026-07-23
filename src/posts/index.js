@@ -11,8 +11,10 @@ import { post as arashiyama } from "./what-to-say-at-arashiyama-bamboo-grove.js"
 import { post as fushimiInari } from "./fushimi-inari-with-kids.js";
 import { post as parisTeens } from "./paris-with-teenagers-tips.js";
 import { post as parisToddlers } from "./paris-with-toddlers.js";
+import { post as romeFacts } from "./rome-facts-for-kids.js";
 
 export const posts = [
+  romeFacts,
   parisToddlers,
   parisTeens,
   fushimiInari,
