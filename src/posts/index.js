@@ -14,8 +14,10 @@ import { post as parisToddlers } from "./paris-with-toddlers.js";
 import { post as romeFacts } from "./rome-facts-for-kids.js";
 import { post as parisFacts } from "./paris-facts-for-kids.js";
 import { post as nishikiMarket } from "./nishiki-market-with-kids.js";
+import { post as kinkakuji } from "./kinkaku-ji-with-kids.js";
 
 export const posts = [
+  kinkakuji,
   nishikiMarket,
   parisFacts,
   romeFacts,
