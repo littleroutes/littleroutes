@@ -18,8 +18,10 @@ import { post as kinkakuji } from "./kinkaku-ji-with-kids.js";
 import { post as vatican } from "./vatican-with-kids.js";
 import { post as trevi } from "./trevi-fountain-with-kids.js";
 import { post as pantheon } from "./pantheon-with-kids.js";
+import { post as parisCatacombs } from "./paris-catacombs-with-kids.js";
 
 export const posts = [
+  parisCatacombs,
   pantheon,
   trevi,
   vatican,
