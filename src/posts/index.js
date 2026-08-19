@@ -20,8 +20,14 @@ import { post as trevi } from "./trevi-fountain-with-kids.js";
 import { post as pantheon } from "./pantheon-with-kids.js";
 import { post as kyotoTeens } from "./kyoto-with-teenagers-tips.js";
 import { post as educationalTrip } from "./how-to-make-any-trip-educational.js";
+import { post as parisCatacombs } from "./paris-catacombs-with-kids.js";
+import { post as dinnerQuestions } from "./dinner-questions-that-work.js";
+import { post as galleriaBorghese } from "./galleria-borghese-with-kids.js";
 
 export const posts = [
+  galleriaBorghese,
+  dinnerQuestions,
+  parisCatacombs,
   educationalTrip,
   kyotoTeens,
   pantheon,
