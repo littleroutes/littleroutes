@@ -19,8 +19,10 @@ import { post as vatican } from "./vatican-with-kids.js";
 import { post as trevi } from "./trevi-fountain-with-kids.js";
 import { post as pantheon } from "./pantheon-with-kids.js";
 import { post as kyotoTeens } from "./kyoto-with-teenagers-tips.js";
+import { post as educationalTrip } from "./how-to-make-any-trip-educational.js";
 
 export const posts = [
+  educationalTrip,
   kyotoTeens,
   pantheon,
   trevi,
