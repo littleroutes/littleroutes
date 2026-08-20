@@ -23,8 +23,10 @@ import { post as educationalTrip } from "./how-to-make-any-trip-educational.js";
 import { post as parisCatacombs } from "./paris-catacombs-with-kids.js";
 import { post as dinnerQuestions } from "./dinner-questions-that-work.js";
 import { post as galleriaBorghese } from "./galleria-borghese-with-kids.js";
+import { post as sacreCoeur } from "./sacre-coeur-with-kids.js";
 
 export const posts = [
+  sacreCoeur,
   galleriaBorghese,
   dinnerQuestions,
   parisCatacombs,
